@@ -2,1009 +2,498 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Mano · App</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --p:#5B4FD9;--pd:#4438c4;--pl:#ede9ff;--plx:#f5f3ff;
-  --g:#16A34A;--gl:#dcfce7;
-  --a:#F59E0B;--al:#fef3c7;
-  --t:#111827;--tm:#6b7280;--ts:#9ca3af;
-  --bg:#F6F4EF;--w:#ffffff;
+  --g:#16A34A;--gl:#dcfce7;--a:#F59E0B;--al:#fef3c7;
+  --t:#111827;--tm:#6b7280;--ts:#9ca3af;--bg:#F6F4EF;--w:#fff;
   --r:20px;--r2:14px;--r3:50px;
-  --shadow:0 4px 24px rgba(0,0,0,0.08);
-  --shadow2:0 8px 40px rgba(0,0,0,0.12);
+  --sh:0 4px 24px rgba(0,0,0,.08);--sh2:0 8px 40px rgba(0,0,0,.12);
 }
-html,body{height:100%;overflow:hidden;font-family:'Manrope',sans-serif;background:#e8e6e1;}
+html,body{height:100%;overflow:hidden;font-family:'Manrope',sans-serif;background:#d4d0cc;}
 body{display:flex;align-items:center;justify-content:center;}
-
-/* ── PHONE SHELL ── */
-.phone{
-  width:390px;height:844px;
-  background:var(--bg);border-radius:44px;
-  overflow:hidden;position:relative;
-  box-shadow:0 32px 80px rgba(0,0,0,0.25),0 0 0 1px rgba(0,0,0,0.1);
-}
-.status-bar{
-  height:44px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;font-size:12px;font-weight:700;color:var(--t);
-  position:relative;z-index:50;flex-shrink:0;
-}
-.status-time{font-size:15px;font-weight:800;}
-.status-icons{display:flex;gap:6px;align-items:center;}
-
-/* ── SCREENS ── */
-.screens{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;}
-.screen{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  background:var(--bg);
-  transform:translateX(100%);
-  transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
-  will-change:transform;
-}
-.screen.active{transform:translateX(0);}
-.screen.exit{transform:translateX(-30%);}
-.screen.prev{transform:translateX(-100%);}
-
-/* ── SCROLLABLE CONTENT ── */
-.scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
+.phone{width:390px;height:844px;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.08);}
+.screens{position:absolute;inset:0;overflow:hidden;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);will-change:transform;}
+.screen.on{transform:translateX(0);}
+.scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
 .scroll::-webkit-scrollbar{display:none;}
-
-/* ── COMPONENTS ── */
-.topbar{
-  height:56px;display:flex;align-items:center;padding:0 20px;
-  gap:12px;flex-shrink:0;position:relative;
-  background:var(--bg);
-}
-.back-btn{
-  width:36px;height:36px;border-radius:50%;background:var(--w);
-  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow);transition:all .15s;flex-shrink:0;
-}
-.back-btn:active{transform:scale(0.92);}
-.topbar-title{font-size:17px;font-weight:800;color:var(--t);flex:1;}
-.topbar-action{
-  width:36px;height:36px;border-radius:50%;background:var(--w);
-  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow);
-}
-
-/* ── BUTTONS ── */
-.btn{
-  width:100%;padding:16px;border-radius:var(--r3);border:none;
-  font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;
-  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:10px;
-}
-.btn:active{transform:scale(0.97);}
-.btn-primary{background:var(--p);color:var(--w);box-shadow:0 8px 24px rgba(91,79,217,0.3);}
-.btn-primary:hover{background:var(--pd);}
-.btn-ghost{background:transparent;color:var(--p);font-size:15px;}
-.btn-outline{background:var(--w);color:var(--t);border:1.5px solid rgba(17,24,39,0.12);}
-
-/* ── BOTTOM NAV ── */
-.bottom-nav{
-  height:80px;background:var(--w);
-  display:flex;align-items:center;justify-content:space-around;
-  padding:0 8px 12px;
-  box-shadow:0 -1px 0 rgba(0,0,0,0.06);
-  flex-shrink:0;
-}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  cursor:pointer;padding:8px 16px;border-radius:12px;
-  transition:all .15s;border:none;background:transparent;
-  font-family:'Manrope',sans-serif;
-}
-.nav-item.active{background:var(--pl);}
-.nav-item svg{width:22px;height:22px;}
-.nav-item span{font-size:10px;font-weight:600;color:var(--ts);}
-.nav-item.active span{color:var(--p);}
-.nav-item.active svg path,.nav-item.active svg circle{stroke:var(--p);}
-
-/* ── INPUT ── */
-.input-wrap{position:relative;margin-bottom:16px;}
-.input-label{font-size:12px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:block;}
-.input{
-  width:100%;padding:14px 16px;border-radius:var(--r2);
-  border:1.5px solid rgba(17,24,39,0.1);background:var(--w);
-  font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;color:var(--t);
-  outline:none;transition:border-color .2s;
-}
-.input:focus{border-color:var(--p);}
-textarea.input{resize:none;min-height:100px;}
-
-/* ── CARDS ── */
-.card{background:var(--w);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);}
-.card+.card{margin-top:12px;}
-
-/* ── CHIP / BADGE ── */
-.badge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r3);padding:5px 12px;font-size:12px;font-weight:700;}
-.badge-green{background:var(--gl);color:var(--g);}
-.badge-purple{background:var(--pl);color:var(--p);}
-.badge-amber{background:var(--al);color:#92400e;}
+/* STATUS BAR */
+.sb{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;flex-shrink:0;}
+.sb-t{font-size:15px;font-weight:800;}
+.sb-ic{display:flex;gap:5px;align-items:center;}
+/* TOPBAR */
+.tb{height:52px;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;background:var(--bg);}
+.bk{width:38px;height:38px;border-radius:50%;background:var(--w);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);flex-shrink:0;transition:transform .14s;}
+.bk:active{transform:scale(.87);}
+.tb-ttl{font-size:17px;font-weight:800;color:var(--t);flex:1;text-align:center;}
+.tb-r{width:38px;height:38px;border-radius:50%;background:var(--w);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);}
+/* PROGRESS */
+.prog{display:flex;gap:6px;justify-content:center;padding:8px 0 12px;flex-shrink:0;}
+.pd{width:6px;height:6px;border-radius:3px;background:rgba(91,79,217,.18);transition:all .3s;}
+.pd.on{width:22px;background:var(--p);}
+/* BUTTONS */
+.btn{width:100%;padding:16px;border-radius:var(--r3);border:none;font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:transform .14s,background .14s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn:active{transform:scale(.97);}
+.btn-p{background:var(--p);color:var(--w);box-shadow:0 8px 24px rgba(91,79,217,.28);}
+.btn-p:hover{background:var(--pd);}
+.btn-w{background:var(--w);color:var(--p);}
+.btn-wt{background:rgba(255,255,255,.14);color:var(--w);}
+.btn-g{background:transparent;color:var(--p);font-size:15px;box-shadow:none;}
+.btn-o{background:var(--w);color:var(--t);border:1.5px solid rgba(17,24,39,.12);box-shadow:none;}
+/* BOTTOM NAV */
+.bnav{height:78px;background:var(--w);display:flex;align-items:center;justify-content:space-around;padding:0 8px 10px;box-shadow:0 -1px 0 rgba(0,0,0,.06);flex-shrink:0;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 16px;border-radius:12px;transition:background .14s;border:none;background:transparent;font-family:'Manrope',sans-serif;}
+.ni.on{background:var(--pl);}
+.ni svg{width:22px;height:22px;}
+.ni span{font-size:10px;font-weight:600;color:var(--ts);}
+.ni.on span{color:var(--p);}
+/* INPUTS */
+.lbl{font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:block;}
+.inp{width:100%;padding:14px 16px;border-radius:var(--r2);border:1.5px solid rgba(17,24,39,.1);background:var(--w);font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;color:var(--t);outline:none;transition:border-color .2s;}
+.inp:focus{border-color:var(--p);}
+textarea.inp{resize:none;min-height:96px;}
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;gap:5px;border-radius:var(--r3);padding:5px 11px;font-size:12px;font-weight:700;}
+.bg-g{background:var(--gl);color:var(--g);}
+.bg-p{background:var(--pl);color:var(--p);}
+.bg-a{background:var(--al);color:#92400e;}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.dot-green{background:var(--g);}
-.dot-purple{background:var(--p);}
-.dot-amber{background:var(--a);}
+.dg{background:var(--g);}
 
-/* ══════════════════════════════════
-   SCREEN 1 — SPLASH / ONBOARDING
-══════════════════════════════════ */
-#s-splash{background:var(--p);justify-content:center;align-items:center;text-align:center;padding:48px 32px;}
-.splash-logo{margin-bottom:40px;animation:scaleIn .6s cubic-bezier(0.34,1.56,0.64,1) both;}
-.splash-logo svg{width:100px;height:100px;}
-.splash-wordmark{font-size:48px;font-weight:800;color:var(--w);letter-spacing:-2px;margin-bottom:16px;}
-.splash-tagline{font-size:17px;font-weight:400;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:64px;}
-.splash-tagline strong{color:var(--w);font-weight:700;}
-.splash-actions{width:100%;display:flex;flex-direction:column;gap:12px;}
-.btn-white-solid{background:var(--w);color:var(--p);}
-.btn-ghost-white{background:rgba(255,255,255,0.12);color:var(--w);}
+/* ── S1 ── */
+#s1{background:var(--p);justify-content:center;align-items:center;text-align:center;padding:48px 32px;}
+.sp-logo{margin-bottom:36px;animation:scaleIn .55s cubic-bezier(.34,1.56,.64,1) both;}
+.sp-logo svg{width:96px;height:96px;}
+.sp-w{font-size:52px;font-weight:800;color:var(--w);letter-spacing:-2.5px;line-height:1;margin-bottom:14px;animation:fadeUp .4s ease .1s both;}
+.sp-tg{font-size:16px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:60px;animation:fadeUp .4s ease .18s both;}
+.sp-tg b{color:var(--w);}
+.sp-bts{width:100%;display:flex;flex-direction:column;gap:12px;animation:fadeUp .4s ease .26s both;}
 
-/* ══════════════════════════════════
-   SCREEN 2 — HOME CLIENTE
-══════════════════════════════════ */
-#s-home .home-header{
-  padding:0 20px 20px;
-  background:linear-gradient(180deg,var(--p) 0%,var(--p) 70%,var(--bg) 100%);
-}
-.home-greeting{
-  padding:8px 0 24px;
-}
-.home-greeting p{font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);margin-bottom:4px;}
-.home-greeting h2{font-size:26px;font-weight:800;color:var(--w);letter-spacing:-0.5px;}
-.search-bar{
-  background:var(--w);border-radius:var(--r2);padding:14px 16px;
-  display:flex;align-items:center;gap:12px;box-shadow:var(--shadow2);
-  cursor:pointer;
-}
-.search-bar span{font-size:15px;color:var(--ts);font-weight:500;flex:1;}
+/* ── S2 ── */
+.hh{background:linear-gradient(180deg,var(--p) 0%,var(--p) 70%,var(--bg) 100%);padding:0 20px 24px;flex-shrink:0;}
+.hg p{font-size:13px;font-weight:500;color:rgba(255,255,255,.65);margin-bottom:3px;padding-top:2px;}
+.hg h2{font-size:26px;font-weight:800;color:var(--w);letter-spacing:-.5px;}
+.sbar{background:var(--w);border-radius:var(--r2);padding:13px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh2);cursor:pointer;margin-top:16px;}
+.sbar span{font-size:14px;color:var(--ts);font-weight:500;flex:1;}
+.hb{padding:0 20px 24px;}
+.ssh{display:flex;align-items:center;justify-content:space-between;margin:18px 0 13px;}
+.ssh h3{font-size:17px;font-weight:800;color:var(--t);}
+.ssh button{font-size:13px;font-weight:700;color:var(--p);background:none;border:none;cursor:pointer;}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ci{background:var(--w);border-radius:var(--r2);padding:14px 10px;text-align:center;cursor:pointer;transition:transform .14s;border:1.5px solid transparent;}
+.ci:active{transform:scale(.93);}
+.ci-em{font-size:26px;display:block;margin-bottom:7px;}
+.ci-nm{font-size:11px;font-weight:700;color:var(--t);}
+.abanner{background:linear-gradient(135deg,var(--p),var(--pd));border-radius:var(--r);padding:18px;margin-bottom:4px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .14s;}
+.abanner:active{transform:scale(.98);}
+.ab-ic{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ab-b{flex:1;}
+.ab-ttl{font-size:14px;font-weight:700;color:var(--w);}
+.ab-sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;}
+.promo{background:var(--gl);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px;}
+.promo-em{font-size:28px;}
+.promo h4{font-size:13px;font-weight:800;color:var(--t);margin-bottom:3px;}
+.promo p{font-size:12px;color:var(--tm);}
 
-.home-content{padding:0 20px 20px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin:24px 0 16px;}
-.section-header h3{font-size:18px;font-weight:800;color:var(--t);}
-.section-header button{font-size:13px;font-weight:700;color:var(--p);background:none;border:none;cursor:pointer;}
+/* ── S3 — BÚSQUEDA / LISTA DE CATEGORÍAS ── */
+.cl{padding:0 20px 24px;display:flex;flex-direction:column;gap:10px;}
+.cr{background:var(--w);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1.5px solid transparent;transition:all .18s;}
+.cr:active{transform:scale(.97);}
+.cr-ic{width:50px;height:50px;border-radius:14px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.cr-b{flex:1;}
+.cr-n{font-size:15px;font-weight:700;color:var(--t);}
+.cr-d{font-size:12px;color:var(--tm);margin-top:2px;}
+.cr-a{font-size:18px;color:var(--ts);}
+/* Search input dentro de S3 */
+.s3-search{display:flex;align-items:center;gap:10px;background:var(--w);border-radius:var(--r2);padding:12px 16px;margin:0 20px 16px;border:1.5px solid rgba(17,24,39,.1);}
+.s3-search input{flex:1;border:none;outline:none;font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;color:var(--t);background:transparent;}
+.s3-search input::placeholder{color:var(--ts);}
 
-/* Service categories grid */
-.cats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.cat-item{
-  background:var(--w);border-radius:var(--r2);padding:16px 12px;
-  text-align:center;cursor:pointer;transition:all .2s;border:1.5px solid transparent;
-}
-.cat-item:active{transform:scale(0.95);}
-.cat-item.selected{border-color:var(--p);background:var(--pl);}
-.cat-emoji{font-size:28px;display:block;margin-bottom:8px;}
-.cat-name{font-size:12px;font-weight:700;color:var(--t);}
+/* ── CI TAP RIPPLE ── */
+.ci{position:relative;overflow:hidden;}
+@keyframes ripple{0%{transform:scale(0);opacity:.35;}100%{transform:scale(4);opacity:0;}}
+.ripple-el{position:absolute;border-radius:50%;background:var(--p);width:60px;height:60px;margin-top:-30px;margin-left:-30px;pointer-events:none;animation:ripple .5s ease-out forwards;}
 
-/* Active request banner */
-.active-request{
-  background:linear-gradient(135deg,var(--p),var(--pd));
-  border-radius:var(--r);padding:20px;margin-bottom:4px;
-  display:flex;align-items:center;gap:16px;cursor:pointer;
-}
-.active-request-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.active-request-body{flex:1;}
-.active-request-title{font-size:15px;font-weight:700;color:var(--w);}
-.active-request-sub{font-size:13px;color:rgba(255,255,255,0.7);margin-top:3px;}
-.active-request-arrow{color:rgba(255,255,255,0.5);font-size:20px;}
+/* ── S4 ── */
+.fp{padding:0 20px 32px;}
+.cp{display:inline-flex;align-items:center;gap:8px;background:var(--pl);border-radius:var(--r3);padding:8px 16px;margin-bottom:20px;}
+.cp span{font-size:18px;}
+.cp b{font-size:14px;font-weight:700;color:var(--p);}
+.ug{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+.ui{background:var(--w);border-radius:var(--r2);padding:14px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all .18s;}
+.ui.on{border-color:var(--p);background:var(--plx);}
+.ui:active{transform:scale(.96);}
+.ui-em{font-size:20px;display:block;margin-bottom:5px;}
+.ui-lb{font-size:13px;font-weight:700;color:var(--t);}
+.ui-sb{font-size:11px;color:var(--tm);margin-top:2px;}
+.pbox{border:2px dashed rgba(91,79,217,.28);border-radius:var(--r2);padding:22px;text-align:center;cursor:pointer;background:var(--plx);margin-bottom:16px;transition:border-color .2s;}
+.pbox:hover{border-color:var(--p);}
+.pbox-em{font-size:28px;margin-bottom:6px;}
+.pbox p{font-size:13px;font-weight:600;color:var(--p);}
+.pbox small{font-size:11px;color:var(--tm);}
+.fmb{margin-bottom:14px;}
 
-/* Promo card */
-.promo-card{
-  background:var(--gl);border-radius:var(--r);padding:20px;
-  display:flex;align-items:center;gap:16px;
-}
-.promo-emoji{font-size:32px;}
-.promo-text h4{font-size:14px;font-weight:800;color:var(--t);margin-bottom:4px;}
-.promo-text p{font-size:13px;color:var(--tm);}
-
-/* ══════════════════════════════════
-   SCREEN 3 — SELECCIÓN CATEGORÍA
-══════════════════════════════════ */
-.cats-list{padding:0 20px 24px;display:flex;flex-direction:column;gap:12px;}
-.cat-row{
-  background:var(--w);border-radius:var(--r);padding:18px 20px;
-  display:flex;align-items:center;gap:16px;cursor:pointer;
-  border:1.5px solid transparent;transition:all .2s;
-}
-.cat-row:active{transform:scale(0.98);}
-.cat-row.selected{border-color:var(--p);background:var(--plx);}
-.cat-row-icon{width:52px;height:52px;border-radius:14px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
-.cat-row-body{flex:1;}
-.cat-row-name{font-size:16px;font-weight:700;color:var(--t);}
-.cat-row-desc{font-size:13px;color:var(--tm);margin-top:3px;}
-.cat-row-arrow{font-size:18px;color:var(--ts);}
-.cat-row.selected .cat-row-arrow{color:var(--p);}
-
-/* ══════════════════════════════════
-   SCREEN 4 — DESCRIBE EL PROBLEMA
-══════════════════════════════════ */
-.form-screen{padding:0 20px 24px;}
-.selected-cat-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--pl);border-radius:var(--r3);padding:8px 16px;
-  margin-bottom:24px;
-}
-.selected-cat-pill span{font-size:20px;}
-.selected-cat-pill strong{font-size:14px;font-weight:700;color:var(--p);}
-
-.urgency-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.urgency-item{
-  background:var(--w);border-radius:var(--r2);padding:14px;
-  text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all .2s;
-}
-.urgency-item.selected{border-color:var(--p);background:var(--plx);}
-.urgency-item:active{transform:scale(0.97);}
-.urgency-emoji{font-size:22px;display:block;margin-bottom:6px;}
-.urgency-label{font-size:13px;font-weight:700;color:var(--t);}
-.urgency-sub{font-size:11px;color:var(--tm);margin-top:2px;}
-
-.photo-upload{
-  border:2px dashed rgba(91,79,217,0.3);border-radius:var(--r2);
-  padding:24px;text-align:center;cursor:pointer;background:var(--plx);
-  margin-bottom:16px;transition:all .2s;
-}
-.photo-upload:hover{border-color:var(--p);}
-.photo-upload-icon{font-size:32px;margin-bottom:8px;}
-.photo-upload p{font-size:14px;font-weight:600;color:var(--p);}
-.photo-upload span{font-size:12px;color:var(--tm);}
-
-/* ══════════════════════════════════
-   SCREEN 5 — TÉCNICOS DISPONIBLES
-══════════════════════════════════ */
-.tech-list{padding:0 20px 24px;display:flex;flex-direction:column;gap:14px;}
-.tech-card-full{
-  background:var(--w);border-radius:var(--r);padding:20px;
-  border:1.5px solid transparent;transition:all .2s;cursor:pointer;
-}
-.tech-card-full:active{transform:scale(0.99);}
-.tech-card-full.featured{border-color:var(--p);}
-.tech-card-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
-.tech-ava{
-  width:56px;height:56px;border-radius:18px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;font-weight:800;color:var(--w);
-}
-.tech-info{flex:1;}
-.tech-info h4{font-size:16px;font-weight:800;color:var(--t);margin-bottom:2px;}
-.tech-info p{font-size:13px;color:var(--tm);margin-bottom:8px;}
-.tech-meta{display:flex;gap:8px;flex-wrap:wrap;}
-.tech-rating-row{display:flex;align-items:center;gap:6px;}
+/* ── S5 ── */
+.frow{display:flex;gap:8px;padding:8px 20px 4px;overflow-x:auto;flex-shrink:0;}
+.frow::-webkit-scrollbar{display:none;}
+.fc{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r3);border:1.5px solid rgba(17,24,39,.1);background:var(--w);font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;color:var(--tm);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.fc.on{background:var(--p);color:var(--w);border-color:var(--p);}
+.tl{padding:0 20px 24px;display:flex;flex-direction:column;gap:12px;}
+.tc{background:var(--w);border-radius:var(--r);padding:18px;border:1.5px solid transparent;transition:all .18s;cursor:pointer;position:relative;}
+.tc:active{transform:scale(.985);}
+.tc.ft{border-color:var(--p);}
+.ftg{position:absolute;top:-1px;right:14px;background:var(--p);color:var(--w);font-size:10px;font-weight:700;padding:3px 10px;border-radius:0 0 8px 8px;}
+.tch{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.tav{width:52px;height:52px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--w);}
+.ti h4{font-size:15px;font-weight:800;color:var(--t);margin-bottom:2px;}
+.ti p{font-size:12px;color:var(--tm);margin-bottom:7px;}
+.ti-m{display:flex;gap:6px;flex-wrap:wrap;}
+.tst{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+.ts{background:var(--bg);border-radius:10px;padding:9px;text-align:center;}
+.ts-v{font-size:14px;font-weight:800;color:var(--t);}
+.ts-l{font-size:10px;color:var(--tm);margin-top:1px;font-weight:600;}
+.tr{display:flex;align-items:center;gap:6px;margin-bottom:12px;}
 .stars{color:var(--a);font-size:13px;letter-spacing:-1px;}
-.rating{font-size:13px;font-weight:700;color:var(--t);}
-.jobs{font-size:12px;color:var(--ts);}
-.tech-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
-.tech-stat{background:var(--bg);border-radius:10px;padding:10px;text-align:center;}
-.tech-stat-val{font-size:14px;font-weight:800;color:var(--t);}
-.tech-stat-lbl{font-size:10px;color:var(--tm);margin-top:2px;font-weight:600;}
-.tech-actions{display:flex;gap:8px;}
-.btn-sm{padding:10px 16px;border-radius:var(--r3);font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .15s;}
-.btn-sm:active{transform:scale(0.95);}
-.btn-sm-primary{background:var(--p);color:var(--w);flex:1;}
-.btn-sm-outline{background:var(--w);color:var(--t);border:1.5px solid rgba(17,24,39,0.12);}
-.featured-tag{
-  position:absolute;top:-1px;right:16px;
-  background:var(--p);color:var(--w);
-  font-size:11px;font-weight:700;padding:4px 10px;border-radius:0 0 8px 8px;
-}
-.tech-card-full{position:relative;}
+.rn{font-size:13px;font-weight:700;}
+.rj{font-size:11px;color:var(--ts);}
+.tbs{display:flex;gap:8px;}
+.bsm{padding:10px 14px;border-radius:var(--r3);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Manrope',sans-serif;transition:transform .12s;}
+.bsm:active{transform:scale(.93);}
+.bsm-p{background:var(--p);color:var(--w);flex:1;}
+.bsm-o{background:var(--w);color:var(--t);border:1.5px solid rgba(17,24,39,.12);}
 
-.filter-row{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;}
-.filter-row::-webkit-scrollbar{display:none;}
-.filter-chip{
-  display:flex;align-items:center;gap:6px;
-  padding:8px 16px;border-radius:var(--r3);border:1.5px solid rgba(17,24,39,0.1);
-  background:var(--w);font-family:'Manrope',sans-serif;
-  font-size:13px;font-weight:600;color:var(--tm);cursor:pointer;white-space:nowrap;
-  transition:all .15s;
-}
-.filter-chip.active{background:var(--p);color:var(--w);border-color:var(--p);}
+/* ── S6 ── */
+.ch{background:linear-gradient(160deg,var(--p) 0%,var(--pd) 100%);padding:20px 24px 28px;text-align:center;flex-shrink:0;}
+.cav{width:76px;height:76px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--w);margin:0 auto 14px;border:3px solid rgba(255,255,255,.25);}
+.cn{font-size:21px;font-weight:800;color:var(--w);margin-bottom:3px;}
+.crl{font-size:13px;color:rgba(255,255,255,.65);}
+.cvr{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,.15);border-radius:var(--r3);padding:6px 14px;}
+.cvr span{font-size:12px;font-weight:700;color:var(--w);}
+.cb{padding:16px 20px 0;}
+.cro{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(17,24,39,.06);}
+.cro:last-of-type{border:none;}
+.cl2{font-size:13px;color:var(--tm);font-weight:500;}
+.cv{font-size:14px;font-weight:700;color:var(--t);}
+.cp2{font-size:22px;font-weight:800;color:var(--p);}
+.ca{padding:16px 20px 28px;display:flex;flex-direction:column;gap:10px;}
+/* SUCCESS */
+.sov{position:absolute;inset:0;background:var(--p);z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 32px;opacity:0;pointer-events:none;transition:opacity .28s;}
+.sov.on{opacity:1;pointer-events:all;}
+.sov-em{font-size:72px;margin-bottom:24px;}
+.sov h2{font-size:27px;font-weight:800;color:var(--w);letter-spacing:-1px;margin-bottom:12px;}
+.sov p{font-size:16px;color:rgba(255,255,255,.72);line-height:1.6;}
+.sov-btn{margin-top:36px;background:rgba(255,255,255,.16);color:var(--w);border:none;border-radius:var(--r3);padding:14px 32px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
 
-/* ══════════════════════════════════
-   SCREEN 6 — CONFIRMACIÓN
-══════════════════════════════════ */
-.confirm-hero{
-  background:linear-gradient(160deg,var(--p) 0%,var(--pd) 100%);
-  padding:32px 24px;text-align:center;
-}
-.confirm-tech-avatar{
-  width:80px;height:80px;border-radius:24px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:800;color:var(--w);
-  margin:0 auto 16px;border:3px solid rgba(255,255,255,0.3);
-}
-.confirm-tech-name{font-size:22px;font-weight:800;color:var(--w);margin-bottom:4px;}
-.confirm-tech-role{font-size:14px;color:rgba(255,255,255,0.7);}
-.confirm-verified{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,0.15);border-radius:var(--r3);padding:6px 14px;}
-.confirm-verified span{font-size:13px;font-weight:700;color:var(--w);}
+/* ── S7 ── */
+.tmap{height:190px;background:linear-gradient(135deg,#dff0f8,#c8e8f0);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tmap-pin{font-size:40px;animation:bounce 1.8s ease-in-out infinite;}
+.tmap p{font-size:12px;color:var(--tm);font-weight:600;margin-top:6px;text-align:center;}
+.tkcard{background:var(--w);margin:-22px 20px 14px;border-radius:var(--r);padding:18px;box-shadow:var(--sh2);position:relative;z-index:2;}
+.tkst{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.tkic{width:46px;height:46px;border-radius:13px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.tkb h3{font-size:16px;font-weight:800;color:var(--t);}
+.tkb p{font-size:12px;color:var(--tm);margin-top:2px;}
+.eta{background:var(--p);color:var(--w);border-radius:var(--r3);padding:8px 20px;font-size:14px;font-weight:800;text-align:center;margin-bottom:16px;}
+.stks{display:flex;flex-direction:column;}
+.stk{display:flex;gap:14px;}
+.stk-ln{display:flex;flex-direction:column;align-items:center;}
+.stk-d{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.stk-d.done{background:var(--g);}
+.stk-d.cur{background:var(--p);box-shadow:0 0 0 4px rgba(91,79,217,.2);animation:pdot 1.6s infinite;}
+.stk-d.pend{background:var(--bg);border:2px solid rgba(17,24,39,.15);}
+.stk-c{width:2px;flex:1;min-height:22px;background:rgba(17,24,39,.08);}
+.stk-c.done{background:var(--g);}
+.stk-bd{padding-bottom:20px;}
+.stk-bd h4{font-size:13px;font-weight:700;color:var(--t);}
+.stk-bd p{font-size:12px;color:var(--tm);margin-top:1px;}
+.ctrow{display:flex;align-items:center;gap:12px;padding:12px 0 0;border-top:1px solid rgba(17,24,39,.06);margin-top:4px;}
+.cta2{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--w);}
+.cti{flex:1;}
+.cti h4{font-size:14px;font-weight:700;}
+.cti p{font-size:11px;color:var(--tm);}
+.ctbs{display:flex;gap:7px;}
+.ctb{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .12s;}
+.ctb:active{transform:scale(.88);}
+.ctb-cl{background:var(--gl);}
+.ctb-ch{background:var(--pl);}
 
-.confirm-body{padding:20px;}
-.confirm-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(17,24,39,0.06);}
-.confirm-row:last-of-type{border:none;}
-.confirm-row-label{font-size:14px;color:var(--tm);font-weight:500;}
-.confirm-row-value{font-size:14px;font-weight:700;color:var(--t);}
-.confirm-price{font-size:22px;font-weight:800;color:var(--p);}
-
-.confirm-actions{padding:0 20px 24px;display:flex;flex-direction:column;gap:10px;}
-
-/* ══════════════════════════════════
-   SCREEN 7 — TRACKING / ESTADO
-══════════════════════════════════ */
-.tracking-map{
-  height:200px;background:linear-gradient(135deg,#e8f4f8,#d1ecf1);
-  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
-}
-.map-placeholder{text-align:center;}
-.map-placeholder p{font-size:13px;color:var(--tm);font-weight:600;margin-top:8px;}
-.map-pin{font-size:40px;animation:bounce 1.5s ease-in-out infinite;}
-.tracking-card{
-  background:var(--w);margin:-24px 20px 0;border-radius:var(--r);
-  padding:20px;box-shadow:var(--shadow2);position:relative;z-index:2;
-}
-.tracking-status{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.tracking-status-icon{width:48px;height:48px;border-radius:14px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:22px;}
-.tracking-status-body h3{font-size:17px;font-weight:800;color:var(--t);}
-.tracking-status-body p{font-size:13px;color:var(--tm);margin-top:2px;}
-.eta-pill{background:var(--p);color:var(--w);border-radius:var(--r3);padding:8px 20px;font-size:15px;font-weight:800;text-align:center;margin-bottom:16px;}
-
-.steps-track{display:flex;flex-direction:column;gap:0;}
-.step-track{display:flex;gap:16px;position:relative;}
-.step-track-line{display:flex;flex-direction:column;align-items:center;}
-.step-track-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.step-track-dot.done{background:var(--g);}
-.step-track-dot.active{background:var(--p);box-shadow:0 0 0 4px rgba(91,79,217,0.2);animation:pulsedot 1.5s infinite;}
-.step-track-dot.pending{background:var(--bg);border:2px solid rgba(17,24,39,0.15);}
-.step-track-connector{width:2px;flex:1;min-height:24px;background:rgba(17,24,39,0.08);}
-.step-track-connector.done{background:var(--g);}
-.step-track-body{padding-bottom:24px;}
-.step-track-body h4{font-size:14px;font-weight:700;color:var(--t);}
-.step-track-body p{font-size:13px;color:var(--tm);margin-top:2px;}
-
-.tech-contact-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid rgba(17,24,39,0.06);margin-top:4px;}
-.tech-contact-ava{width:44px;height:44px;border-radius:14px;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--w);}
-.tech-contact-info{flex:1;}
-.tech-contact-info h4{font-size:15px;font-weight:700;}
-.tech-contact-info p{font-size:12px;color:var(--tm);}
-.contact-btns{display:flex;gap:8px;}
-.contact-btn{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;}
-.contact-btn:active{transform:scale(0.9);}
-.contact-btn-call{background:var(--gl);}
-.contact-btn-chat{background:var(--pl);}
-
-/* ══════════════════════════════════
-   ANIMATIONS
-══════════════════════════════════ */
-@keyframes scaleIn{from{opacity:0;transform:scale(0.5);}to{opacity:1;transform:scale(1);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+/* ANIMATIONS */
+@keyframes scaleIn{from{opacity:0;transform:scale(.35);}to{opacity:1;transform:scale(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-@keyframes pulsedot{0%,100%{box-shadow:0 0 0 4px rgba(91,79,217,0.2);}50%{box-shadow:0 0 0 8px rgba(91,79,217,0.1);}}
-@keyframes slideUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
-
-.anim-fade{animation:fadeUp .4s ease both;}
-.anim-delay-1{animation-delay:.08s;}
-.anim-delay-2{animation-delay:.16s;}
-.anim-delay-3{animation-delay:.24s;}
-.anim-delay-4{animation-delay:.32s;}
-.anim-delay-5{animation-delay:.40s;}
-
-/* SUCCESS OVERLAY */
-.success-overlay{
-  position:absolute;inset:0;background:var(--p);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:48px;z-index:200;
-  opacity:0;pointer-events:none;transition:opacity .3s;
-}
-.success-overlay.show{opacity:1;pointer-events:all;}
-.success-check{font-size:80px;margin-bottom:24px;animation:scaleIn .5s cubic-bezier(0.34,1.56,0.64,1) both;}
-.success-overlay h2{font-size:28px;font-weight:800;color:var(--w);letter-spacing:-1px;margin-bottom:12px;}
-.success-overlay p{font-size:16px;color:rgba(255,255,255,0.75);line-height:1.6;}
-
-/* PROGRESS INDICATOR */
-.progress-dots{display:flex;gap:6px;justify-content:center;padding:12px 0;}
-.pdot{width:6px;height:6px;border-radius:50%;background:rgba(91,79,217,0.2);transition:all .3s;}
-.pdot.active{width:20px;border-radius:3px;background:var(--p);}
-
+@keyframes pdot{0%,100%{box-shadow:0 0 0 4px rgba(91,79,217,.2);}50%{box-shadow:0 0 0 8px rgba(91,79,217,.06);}}
 </style>
 </head>
 <body>
+<div class="phone"><div class="screens">
 
-<div class="phone">
-  <div class="status-bar">
-    <span class="status-time">9:41</span>
-    <div class="status-icons">
-      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#111827"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#111827"/><rect x="9" y="0" width="3" height="12" rx="1" fill="#111827"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" fill="#111827" opacity=".3"/></svg>
-      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 2.5C5.5 2.5 3.3 3.6 1.8 5.3L0.5 4C2.3 2 4.9 0.8 8 0.8s5.7 1.2 7.5 3.2L14.2 5.3C12.7 3.6 10.5 2.5 8 2.5z" fill="#111827"/><path d="M8 5.5C6.3 5.5 4.8 6.2 3.7 7.3L2.4 6C3.8 4.6 5.8 3.8 8 3.8s4.2.8 5.6 2.2L12.3 7.3C11.2 6.2 9.7 5.5 8 5.5z" fill="#111827"/><circle cx="8" cy="10.5" r="1.5" fill="#111827"/></svg>
-      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#111827" stroke-opacity=".35"/><rect x="2" y="2" width="15" height="8" rx="2" fill="#111827"/><path d="M23 4.5v3a1.5 1.5 0 000-3z" fill="#111827" opacity=".4"/></svg>
+<!-- ══ S1 SPLASH ══ -->
+<div class="screen on" id="s1">
+  <div class="sp-logo"><svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" rx="26" fill="rgba(255,255,255,.16)"/><path d="M18 74V26l30 22 30-22v48" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="80" cy="76" r="12" fill="#16A34A"/><path d="M75 76l3.5 3.5 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="sp-w">mano</div>
+  <p class="sp-tg">El técnico que <b>sí llega.</b><br/>Verificados. Confiables. Cerca de ti.</p>
+  <div class="sp-bts">
+    <button class="btn btn-w" onclick="nav('s2')">Solicitar un servicio</button>
+    <button class="btn btn-wt" onclick="nav('s2')">Ya tengo cuenta → Entrar</button>
+  </div>
+</div>
+
+<!-- ══ S2 HOME ══ -->
+<div class="screen" id="s2">
+  <div class="sb" style="background:var(--p);"><span class="sb-t" style="color:rgba(255,255,255,.85)">9:41</span><div class="sb-ic"><svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="white"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="white"/><rect x="9" y="0" width="3" height="12" rx="1" fill="white"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3.5" stroke="white" stroke-opacity=".5"/><rect x="2" y="2" width="15" height="8" rx="2" fill="white"/></svg></div></div>
+  <div class="scroll">
+    <div class="hh">
+      <div class="hg"><p>Buenos días 👋</p><h2>¿Qué necesitás hoy?</h2></div>
+      <div class="sbar" onclick="nav('s3')"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#9ca3af" stroke-width="1.7"/><path d="M12 12l3 3" stroke="#9ca3af" stroke-width="1.7" stroke-linecap="round"/></svg><span>Buscar un servicio...</span></div>
+    </div>
+    <div class="hb">
+      <div class="abanner" onclick="nav('s7')"><div class="ab-ic">🔧</div><div class="ab-b"><div class="ab-ttl">Carlos R. en camino</div><div class="ab-sub">Plomería · Llegada en ~15 min</div></div><span style="color:rgba(255,255,255,.45);font-size:18px;">›</span></div>
+      <div class="ssh"><h3>Servicios</h3></div>
+      <div class="cg">
+        <div class="ci" onclick="tapCat(this,'Electricidad','⚡')"><span class="ci-em">⚡</span><div class="ci-nm">Electricidad</div></div>
+        <div class="ci" onclick="tapCat(this,'Plomería','🔧')"><span class="ci-em">🔧</span><div class="ci-nm">Plomería</div></div>
+        <div class="ci" onclick="tapCat(this,'Aire A/C','❄️')"><span class="ci-em">❄️</span><div class="ci-nm">Aire A/C</div></div>
+        <div class="ci" onclick="tapCat(this,'Pintura','🎨')"><span class="ci-em">🎨</span><div class="ci-nm">Pintura</div></div>
+        <div class="ci" onclick="tapCat(this,'Cerrajería','🔐')"><span class="ci-em">🔐</span><div class="ci-nm">Cerrajería</div></div>
+        <div class="ci" onclick="tapCat(this,'Limpieza','🧹')"><span class="ci-em">🧹</span><div class="ci-nm">Limpieza</div></div>
+      </div>
+      <div class="ssh"><h3>Destacados</h3></div>
+      <div class="promo"><span class="promo-em">🛡️</span><div><h4>Verificados por Mano</h4><p>Revisamos antecedentes de cada técnico.</p></div></div>
     </div>
   </div>
+  <nav class="bnav">
+    <button class="ni on"><svg viewBox="0 0 24 24" fill="none" stroke="#5B4FD9" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span style="color:var(--p)">Inicio</span></button>
+    <button class="ni" onclick="nav('s3')"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Buscar</span></button>
+    <button class="ni" onclick="nav('s7')"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Servicios</span></button>
+    <button class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Perfil</span></button>
+  </nav>
+</div>
 
-  <div class="screens">
 
-    <!-- ── SPLASH ── -->
-    <div class="screen active" id="s-splash">
-      <div class="splash-logo">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" rx="28" fill="rgba(255,255,255,0.15)"/>
-          <path d="M20 72V32l30 22 30-22v40" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="82" cy="76" r="11" fill="#16A34A"/>
-          <path d="M77 76l3.5 3.5 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="splash-wordmark anim-fade anim-delay-1">mano</div>
-      <p class="splash-tagline anim-fade anim-delay-2">El técnico que <strong>sí llega.</strong><br/>Verificados. Confiables. Cerca de ti.</p>
-      <div class="splash-actions anim-fade anim-delay-3">
-        <button class="btn btn-white-solid" onclick="go('s-home')">Solicitar un servicio</button>
-        <button class="btn btn-ghost-white" onclick="go('s-home')">Ya tengo cuenta → Entrar</button>
-      </div>
+
+<!-- ══ S3 BÚSQUEDA ══ -->
+<div class="screen" id="s3">
+  <div class="sb"><span class="sb-t">9:41</span></div>
+  <div class="tb">
+    <button class="bk" onclick="goBack()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="tb-ttl">¿Qué necesitás?</div>
+    <div style="width:38px;"></div>
+  </div>
+  <div class="s3-search">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#9ca3af" stroke-width="1.7"/><path d="M12 12l3 3" stroke="#9ca3af" stroke-width="1.7" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Buscar servicio..." autofocus/>
+  </div>
+  <div class="scroll"><div class="cl">
+    <div class="cr" onclick="tapCat(null,'Electricidad','⚡')">
+      <div class="cr-ic">⚡</div><div class="cr-b"><div class="cr-n">Electricidad</div><div class="cr-d">Instalaciones, tableros, emergencias</div></div><span class="cr-a">›</span>
     </div>
-
-    <!-- ── HOME ── -->
-    <div class="screen" id="s-home">
-      <div class="scroll">
-        <div class="home-header">
-          <div class="status-bar" style="background:transparent;">
-            <span class="status-time" style="color:rgba(255,255,255,0.8);">9:41</span>
-            <div class="status-icons" style="opacity:0;"></div>
-          </div>
-          <div class="home-greeting" style="padding:0 20px 20px;">
-            <p style="font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);margin-bottom:4px;">Buenos días 👋</p>
-            <h2 style="font-size:26px;font-weight:800;color:white;letter-spacing:-0.5px;margin-bottom:20px;">¿Qué necesitás hoy?</h2>
-            <div class="search-bar" onclick="go('s-categoria')">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="6" stroke="#9ca3af" stroke-width="1.8"/><path d="M13 13l3 3" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round"/></svg>
-              <span>Buscar un servicio...</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="home-content">
-          <!-- Active request -->
-          <div class="active-request anim-fade" onclick="go('s-tracking')">
-            <div class="active-request-icon">🔧</div>
-            <div class="active-request-body">
-              <div class="active-request-title">Carlos R. en camino</div>
-              <div class="active-request-sub">Plomería · Llegada en ~15 min</div>
-            </div>
-            <span class="active-request-arrow">›</span>
-          </div>
-
-          <div class="section-header anim-fade anim-delay-1">
-            <h3>Servicios</h3>
-            <button onclick="go('s-categoria')">Ver todos</button>
-          </div>
-
-          <div class="cats-grid anim-fade anim-delay-2">
-            <div class="cat-item" onclick="selectCat('Electricidad','⚡');go('s-categoria')">
-              <span class="cat-emoji">⚡</span>
-              <div class="cat-name">Electricidad</div>
-            </div>
-            <div class="cat-item" onclick="selectCat('Plomería','🔧');go('s-categoria')">
-              <span class="cat-emoji">🔧</span>
-              <div class="cat-name">Plomería</div>
-            </div>
-            <div class="cat-item" onclick="selectCat('Aire A/C','❄️');go('s-categoria')">
-              <span class="cat-emoji">❄️</span>
-              <div class="cat-name">Aire A/C</div>
-            </div>
-            <div class="cat-item" onclick="selectCat('Pintura','🎨');go('s-categoria')">
-              <span class="cat-emoji">🎨</span>
-              <div class="cat-name">Pintura</div>
-            </div>
-            <div class="cat-item" onclick="selectCat('Cerrajería','🔐');go('s-categoria')">
-              <span class="cat-emoji">🔐</span>
-              <div class="cat-name">Cerrajería</div>
-            </div>
-            <div class="cat-item" onclick="go('s-categoria')">
-              <span class="cat-emoji">➕</span>
-              <div class="cat-name">Más</div>
-            </div>
-          </div>
-
-          <div class="section-header anim-fade anim-delay-3">
-            <h3>Destacados</h3>
-          </div>
-
-          <div class="promo-card anim-fade anim-delay-4">
-            <span class="promo-emoji">🛡️</span>
-            <div class="promo-text">
-              <h4>Todos verificados por Mano</h4>
-              <p>Revisamos antecedentes y calificaciones de cada técnico.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <nav class="bottom-nav">
-        <button class="nav-item active">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#5B4FD9"/><polyline points="9 22 9 12 15 12 15 22" stroke="#5B4FD9"/></svg>
-          <span style="color:var(--p)">Inicio</span>
-        </button>
-        <button class="nav-item" onclick="go('s-categoria')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span>Buscar</span>
-        </button>
-        <button class="nav-item" onclick="go('s-tracking')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span>Servicios</span>
-        </button>
-        <button class="nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Perfil</span>
-        </button>
-      </nav>
+    <div class="cr" onclick="tapCat(null,'Plomería','🔧')">
+      <div class="cr-ic">🔧</div><div class="cr-b"><div class="cr-n">Plomería</div><div class="cr-d">Tuberías, filtraciones, griferías</div></div><span class="cr-a">›</span>
     </div>
-
-    <!-- ── CATEGORÍA ── -->
-    <div class="screen" id="s-categoria">
-      <div class="topbar">
-        <button class="back-btn" onclick="back()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="topbar-title">¿Qué necesitás?</div>
-      </div>
-      <div class="scroll">
-        <div class="progress-dots" style="padding:4px 0 16px;">
-          <div class="pdot active"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
-        </div>
-        <div class="cats-list">
-          <div class="cat-row anim-fade" onclick="selectCat('Electricidad','⚡');go('s-descripcion')">
-            <div class="cat-row-icon">⚡</div>
-            <div class="cat-row-body">
-              <div class="cat-row-name">Electricidad</div>
-              <div class="cat-row-desc">Instalaciones, tableros, emergencias</div>
-            </div>
-            <span class="cat-row-arrow">›</span>
-          </div>
-          <div class="cat-row anim-fade anim-delay-1" onclick="selectCat('Plomería','🔧');go('s-descripcion')">
-            <div class="cat-row-icon">🔧</div>
-            <div class="cat-row-body">
-              <div class="cat-row-name">Plomería</div>
-              <div class="cat-row-desc">Tuberías, filtraciones, griferías</div>
-            </div>
-            <span class="cat-row-arrow">›</span>
-          </div>
-          <div class="cat-row anim-fade anim-delay-2" onclick="selectCat('Aire A/C','❄️');go('s-descripcion')">
-            <div class="cat-row-icon">❄️</div>
-            <div class="cat-row-body">
-              <div class="cat-row-name">Aire Acondicionado</div>
-              <div class="cat-row-desc">Instalación, mantenimiento, reparación</div>
-            </div>
-            <span class="cat-row-arrow">›</span>
-          </div>
-          <div class="cat-row anim-fade anim-delay-3" onclick="selectCat('Pintura','🎨');go('s-descripcion')">
-            <div class="cat-row-icon">🎨</div>
-            <div class="cat-row-body">
-              <div class="cat-row-name">Pintura</div>
-              <div class="cat-row-desc">Interiores, exteriores, acabados</div>
-            </div>
-            <span class="cat-row-arrow">›</span>
-          </div>
-          <div class="cat-row anim-fade anim-delay-4" onclick="selectCat('Cerrajería','🔐');go('s-descripcion')">
-            <div class="cat-row-icon">🔐</div>
-            <div class="cat-row-body">
-              <div class="cat-row-name">Cerrajería</div>
-              <div class="cat-row-desc">Aperturas, cambio de chapas</div>
-            </div>
-            <span class="cat-row-arrow">›</span>
-          </div>
-        </div>
-      </div>
+    <div class="cr" onclick="tapCat(null,'Aire A/C','❄️')">
+      <div class="cr-ic">❄️</div><div class="cr-b"><div class="cr-n">Aire Acondicionado</div><div class="cr-d">Instalación, mantenimiento, reparación</div></div><span class="cr-a">›</span>
     </div>
-
-    <!-- ── DESCRIPCIÓN ── -->
-    <div class="screen" id="s-descripcion">
-      <div class="topbar">
-        <button class="back-btn" onclick="back()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="topbar-title">Describí el problema</div>
-      </div>
-      <div class="scroll">
-        <div class="progress-dots" style="padding:4px 0 16px;">
-          <div class="pdot"></div><div class="pdot active"></div><div class="pdot"></div><div class="pdot"></div>
-        </div>
-        <div class="form-screen">
-          <div class="selected-cat-pill anim-fade" id="selected-cat-display">
-            <span>⚡</span><strong id="cat-name-display">Electricidad</strong>
-          </div>
-
-          <label class="input-label">¿Qué urgencia tiene?</label>
-          <div class="urgency-grid anim-fade anim-delay-1">
-            <div class="urgency-item selected" onclick="selectUrgency(this)">
-              <span class="urgency-emoji">🚨</span>
-              <div class="urgency-label">Urgente</div>
-              <div class="urgency-sub">Hoy mismo</div>
-            </div>
-            <div class="urgency-item" onclick="selectUrgency(this)">
-              <span class="urgency-emoji">📅</span>
-              <div class="urgency-label">Programar</div>
-              <div class="urgency-sub">Esta semana</div>
-            </div>
-          </div>
-
-          <div class="input-wrap anim-fade anim-delay-2">
-            <label class="input-label">Describí el problema</label>
-            <textarea class="input" placeholder="Ej: El breaker de la sala se dispara cada vez que enciendo el A/C. Necesito que lo revisen hoy..." rows="4"></textarea>
-          </div>
-
-          <div class="input-wrap anim-fade anim-delay-3">
-            <label class="input-label">Dirección</label>
-            <input class="input" type="text" placeholder="Ej: Escazú, cerca del Multiplaza" value="Escazú, San José"/>
-          </div>
-
-          <div class="photo-upload anim-fade anim-delay-4">
-            <div class="photo-upload-icon">📷</div>
-            <p>Agregá una foto (opcional)</p>
-            <span>Ayuda al técnico a prepararse mejor</span>
-          </div>
-
-          <button class="btn btn-primary anim-fade anim-delay-5" onclick="go('s-tecnicos')">
-            Ver técnicos disponibles →
-          </button>
-        </div>
-      </div>
+    <div class="cr" onclick="tapCat(null,'Pintura','🎨')">
+      <div class="cr-ic">🎨</div><div class="cr-b"><div class="cr-n">Pintura</div><div class="cr-d">Interiores, exteriores, acabados</div></div><span class="cr-a">›</span>
     </div>
-
-    <!-- ── TÉCNICOS ── -->
-    <div class="screen" id="s-tecnicos">
-      <div class="topbar">
-        <button class="back-btn" onclick="back()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="topbar-title">Técnicos disponibles</div>
-        <button class="topbar-action">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="#111827" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <div class="progress-dots" style="padding:4px 0 8px;">
-        <div class="pdot"></div><div class="pdot"></div><div class="pdot active"></div><div class="pdot"></div>
-      </div>
-      <div class="filter-row">
-        <button class="filter-chip active">⭐ Mejor calificados</button>
-        <button class="filter-chip">📍 Más cercanos</button>
-        <button class="filter-chip">💰 Menor precio</button>
-        <button class="filter-chip">⚡ Disponible ahora</button>
-      </div>
-      <div class="scroll">
-        <div class="tech-list">
-
-          <div class="tech-card-full featured anim-fade" onclick="selectTech('Carlos Ramírez','CR','#5B4FD9','Plomero');go('s-confirm')">
-            <div class="featured-tag">⭐ Recomendado</div>
-            <div class="tech-card-header">
-              <div class="tech-ava" style="background:#5B4FD9;">CR</div>
-              <div class="tech-info">
-                <h4>Carlos Ramírez</h4>
-                <p>Electricista · 8 años exp.</p>
-                <div class="tech-meta">
-                  <div class="badge badge-green"><span class="dot dot-green"></span>Verificado</div>
-                  <div class="badge badge-purple">A 2.3 km</div>
-                </div>
-              </div>
-            </div>
-            <div class="tech-stats">
-              <div class="tech-stat"><div class="tech-stat-val">4.9</div><div class="tech-stat-lbl">Rating</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">312</div><div class="tech-stat-lbl">Servicios</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">$45</div><div class="tech-stat-lbl">Visita</div></div>
-            </div>
-            <div class="tech-rating-row" style="margin-bottom:14px;">
-              <span class="stars">★★★★★</span>
-              <span class="rating">4.9</span>
-              <span class="jobs">· "Excelente trabajo, muy puntual y profesional."</span>
-            </div>
-            <div class="tech-actions">
-              <button class="btn-sm btn-sm-primary" onclick="event.stopPropagation();selectTech('Carlos Ramírez','CR','#5B4FD9','Electricista');go('s-confirm')">Seleccionar →</button>
-              <button class="btn-sm btn-sm-outline">Ver perfil</button>
-            </div>
-          </div>
-
-          <div class="tech-card-full anim-fade anim-delay-1" onclick="selectTech('Andrea López','AL','#16A34A','Electricista');go('s-confirm')">
-            <div class="tech-card-header">
-              <div class="tech-ava" style="background:#16A34A;">AL</div>
-              <div class="tech-info">
-                <h4>Andrea López</h4>
-                <p>Electricista · 6 años exp.</p>
-                <div class="tech-meta">
-                  <div class="badge badge-green"><span class="dot dot-green"></span>Verificada</div>
-                  <div class="badge badge-purple">A 4.1 km</div>
-                </div>
-              </div>
-            </div>
-            <div class="tech-stats">
-              <div class="tech-stat"><div class="tech-stat-val">4.8</div><div class="tech-stat-lbl">Rating</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">187</div><div class="tech-stat-lbl">Servicios</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">$40</div><div class="tech-stat-lbl">Visita</div></div>
-            </div>
-            <div class="tech-actions">
-              <button class="btn-sm btn-sm-primary" onclick="event.stopPropagation();selectTech('Andrea López','AL','#16A34A','Electricista');go('s-confirm')">Seleccionar →</button>
-              <button class="btn-sm btn-sm-outline">Ver perfil</button>
-            </div>
-          </div>
-
-          <div class="tech-card-full anim-fade anim-delay-2" onclick="selectTech('Mario Vega','MV','#111827','Electricista');go('s-confirm')">
-            <div class="tech-card-header">
-              <div class="tech-ava" style="background:#111827;">MV</div>
-              <div class="tech-info">
-                <h4>Mario Vega</h4>
-                <p>Electricista · 10 años exp.</p>
-                <div class="tech-meta">
-                  <div class="badge badge-green"><span class="dot dot-green"></span>Verificado</div>
-                  <div class="badge badge-amber">A 6.8 km</div>
-                </div>
-              </div>
-            </div>
-            <div class="tech-stats">
-              <div class="tech-stat"><div class="tech-stat-val">4.7</div><div class="tech-stat-lbl">Rating</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">244</div><div class="tech-stat-lbl">Servicios</div></div>
-              <div class="tech-stat"><div class="tech-stat-val">$38</div><div class="tech-stat-lbl">Visita</div></div>
-            </div>
-            <div class="tech-actions">
-              <button class="btn-sm btn-sm-primary" onclick="event.stopPropagation();selectTech('Mario Vega','MV','#111827','Electricista');go('s-confirm')">Seleccionar →</button>
-              <button class="btn-sm btn-sm-outline">Ver perfil</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
+    <div class="cr" onclick="tapCat(null,'Cerrajería','🔐')">
+      <div class="cr-ic">🔐</div><div class="cr-b"><div class="cr-n">Cerrajería</div><div class="cr-d">Aperturas, cambio de chapas</div></div><span class="cr-a">›</span>
     </div>
-
-    <!-- ── CONFIRMACIÓN ── -->
-    <div class="screen" id="s-confirm">
-      <div class="topbar" style="position:absolute;top:44px;left:0;right:0;background:transparent;z-index:10;">
-        <button class="back-btn" style="background:rgba(255,255,255,0.2);" onclick="back()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-      <div class="scroll">
-        <div style="height:44px;"></div>
-        <div class="progress-dots" style="padding:4px 0 0;position:absolute;top:44px;left:0;right:0;z-index:9;">
-          <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot active"></div>
-        </div>
-        <div class="confirm-hero">
-          <div style="height:24px;"></div>
-          <div class="confirm-tech-avatar" id="confirm-avatar" style="background:#5B4FD9;">CR</div>
-          <div class="confirm-tech-name" id="confirm-name">Carlos Ramírez</div>
-          <div class="confirm-tech-role" id="confirm-role">Electricista · 8 años de experiencia</div>
-          <div class="confirm-verified">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#16A34A"/><path d="M4 7l2.5 2.5 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Verificado por Mano</span>
-          </div>
-        </div>
-
-        <div class="confirm-body">
-          <div class="confirm-row">
-            <span class="confirm-row-label">Servicio</span>
-            <span class="confirm-row-value" id="confirm-service">Electricidad</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-row-label">Urgencia</span>
-            <span class="confirm-row-value">🚨 Hoy mismo</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-row-label">Dirección</span>
-            <span class="confirm-row-value">Escazú, San José</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-row-label">Llegada estimada</span>
-            <span class="confirm-row-value">~20–30 min</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-row-label">Costo de visita</span>
-            <span class="confirm-row-value confirm-price">$45</span>
-          </div>
-        </div>
-
-        <div class="confirm-actions">
-          <button class="btn btn-primary" onclick="confirmBooking()">✓ Confirmar solicitud</button>
-          <button class="btn btn-ghost" onclick="back()">Elegir otro técnico</button>
-        </div>
-      </div>
-
-      <!-- Success overlay -->
-      <div class="success-overlay" id="success-overlay">
-        <div class="success-check">✅</div>
-        <h2>¡Solicitud enviada!</h2>
-        <p>Tu técnico fue notificado.<br/>Te avisamos cuando esté en camino.</p>
-        <button class="btn" style="background:rgba(255,255,255,0.15);color:white;margin-top:32px;max-width:280px;" onclick="hideSuccess()">Ver estado del servicio →</button>
-      </div>
+    <div class="cr" onclick="tapCat(null,'Limpieza','🧹')">
+      <div class="cr-ic">🧹</div><div class="cr-b"><div class="cr-n">Limpieza</div><div class="cr-d">Hogar, oficinas, post-obra</div></div><span class="cr-a">›</span>
     </div>
+  </div></div>
+</div>
 
-    <!-- ── TRACKING ── -->
-    <div class="screen" id="s-tracking">
-      <div class="topbar">
-        <button class="back-btn" onclick="back()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="topbar-title">Estado del servicio</div>
-        <button class="topbar-action">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.5" fill="#111827"/><circle cx="8" cy="8" r="1.5" fill="#111827"/><circle cx="8" cy="12" r="1.5" fill="#111827"/></svg>
-        </button>
-      </div>
-      <div class="scroll">
-        <div class="tracking-map">
-          <div class="map-placeholder">
-            <div class="map-pin">📍</div>
-            <p>Carlos R. está en camino</p>
-          </div>
-        </div>
-
-        <div style="padding:0 20px;">
-          <div class="tracking-card" style="margin:-24px 0 16px;">
-            <div class="tracking-status">
-              <div class="tracking-status-icon">🚗</div>
-              <div class="tracking-status-body">
-                <h3>Tu técnico está en camino</h3>
-                <p>Carlos Ramírez · Electricista</p>
-              </div>
-            </div>
-            <div class="eta-pill">Llegada estimada: ~15 min</div>
-
-            <div class="steps-track">
-              <div class="step-track">
-                <div class="step-track-line">
-                  <div class="step-track-dot done"></div>
-                  <div class="step-track-connector done"></div>
-                </div>
-                <div class="step-track-body">
-                  <h4>Solicitud confirmada</h4>
-                  <p>9:23 AM · Tu técnico fue asignado</p>
-                </div>
-              </div>
-              <div class="step-track">
-                <div class="step-track-line">
-                  <div class="step-track-dot active"></div>
-                  <div class="step-track-connector"></div>
-                </div>
-                <div class="step-track-body">
-                  <h4>En camino</h4>
-                  <p>Carlos salió hace 8 minutos</p>
-                </div>
-              </div>
-              <div class="step-track">
-                <div class="step-track-line">
-                  <div class="step-track-dot pending"></div>
-                  <div class="step-track-connector"></div>
-                </div>
-                <div class="step-track-body">
-                  <h4>Llegó al sitio</h4>
-                  <p>Pendiente</p>
-                </div>
-              </div>
-              <div class="step-track">
-                <div class="step-track-line">
-                  <div class="step-track-dot pending"></div>
-                </div>
-                <div class="step-track-body">
-                  <h4>Servicio completado</h4>
-                  <p>Pendiente</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="tech-contact-row">
-              <div class="tech-contact-ava">CR</div>
-              <div class="tech-contact-info">
-                <h4>Carlos Ramírez</h4>
-                <p>⭐ 4.9 · 312 servicios · Verificado</p>
-              </div>
-              <div class="contact-btns">
-                <button class="contact-btn contact-btn-call">📞</button>
-                <button class="contact-btn contact-btn-chat">💬</button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-outline" style="margin-bottom:24px;" onclick="go('s-home')">← Volver al inicio</button>
-        </div>
-      </div>
+<!-- ══ S4 DESCRIPCIÓN ══ -->
+<div class="screen" id="s4">
+  <div class="sb"><span class="sb-t">9:41</span></div>
+  <div class="tb"><button class="bk" onclick="goBack()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="tb-ttl">Describí el problema</div><div style="width:38px;"></div></div>
+  <div class="prog"><div class="pd on"></div><div class="pd"></div><div class="pd"></div></div>
+  <div class="scroll"><div class="fp">
+    <div class="cp"><span id="cat-em">⚡</span><b id="cat-nm">Electricidad</b></div>
+    <label class="lbl">¿Qué urgencia tiene?</label>
+    <div class="ug">
+      <div class="ui on" onclick="pickU(this)"><span class="ui-em">🚨</span><div class="ui-lb">Urgente</div><div class="ui-sb">Hoy mismo</div></div>
+      <div class="ui" onclick="pickU(this)"><span class="ui-em">📅</span><div class="ui-lb">Programar</div><div class="ui-sb">Esta semana</div></div>
     </div>
+    <div class="fmb" style="margin-top:14px;"><label class="lbl">Describí el problema</label><textarea class="inp" placeholder="Ej: El breaker de la sala se dispara cada vez que enciendo el A/C..."></textarea></div>
+    <div class="fmb"><label class="lbl">Dirección</label><input class="inp" id="addr" type="text" value="Escazú, San José" placeholder="Ej: Escazú, cerca del Multiplaza"/></div>
+    <div class="pbox"><div class="pbox-em">📷</div><p>Agregá una foto (opcional)</p><small>Ayuda al técnico a prepararse mejor</small></div>
+    <button class="btn btn-p" onclick="nav('s5')">Ver técnicos disponibles →</button>
+  </div></div>
+</div>
 
-  </div><!-- /screens -->
-</div><!-- /phone -->
+<!-- ══ S5 TÉCNICOS ══ -->
+<div class="screen" id="s5">
+  <div class="sb"><span class="sb-t">9:41</span></div>
+  <div class="tb"><button class="bk" onclick="goBack()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="tb-ttl">Técnicos disponibles</div><button class="tb-r"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="#111827" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+  <div class="prog"><div class="pd"></div><div class="pd on"></div><div class="pd"></div></div>
+  <div class="frow">
+    <button class="fc on" onclick="pickF(this)">⭐ Mejor calificados</button>
+    <button class="fc" onclick="pickF(this)">📍 Más cercanos</button>
+    <button class="fc" onclick="pickF(this)">💰 Menor precio</button>
+    <button class="fc" onclick="pickF(this)">⚡ Disponible ahora</button>
+  </div>
+  <div class="scroll"><div class="tl">
+    <div class="tc ft" onclick="setT('Carlos Ramírez','CR','#5B4FD9','Electricista','4.9','312','$45');nav('s6')">
+      <div class="ftg">⭐ Recomendado</div>
+      <div class="tch"><div class="tav" style="background:#5B4FD9;">CR</div><div class="ti"><h4>Carlos Ramírez</h4><p>Electricista · 8 años exp.</p><div class="ti-m"><div class="bdg bg-g"><span class="dot dg"></span>Verificado</div><div class="bdg bg-p">A 2.3 km</div></div></div></div>
+      <div class="tst"><div class="ts"><div class="ts-v">4.9</div><div class="ts-l">Rating</div></div><div class="ts"><div class="ts-v">312</div><div class="ts-l">Servicios</div></div><div class="ts"><div class="ts-v">$45</div><div class="ts-l">Visita</div></div></div>
+      <div class="tr"><span class="stars">★★★★★</span><span class="rn">4.9</span><span class="rj">· "Excelente, muy puntual"</span></div>
+      <div class="tbs"><button class="bsm bsm-p" onclick="event.stopPropagation();setT('Carlos Ramírez','CR','#5B4FD9','Electricista','4.9','312','$45');nav('s6')">Seleccionar →</button><button class="bsm bsm-o" onclick="event.stopPropagation()">Ver perfil</button></div>
+    </div>
+    <div class="tc" onclick="setT('Andrea López','AL','#16A34A','Electricista','4.8','187','$40');nav('s6')">
+      <div class="tch"><div class="tav" style="background:#16A34A;">AL</div><div class="ti"><h4>Andrea López</h4><p>Electricista · 6 años exp.</p><div class="ti-m"><div class="bdg bg-g"><span class="dot dg"></span>Verificada</div><div class="bdg bg-p">A 4.1 km</div></div></div></div>
+      <div class="tst"><div class="ts"><div class="ts-v">4.8</div><div class="ts-l">Rating</div></div><div class="ts"><div class="ts-v">187</div><div class="ts-l">Servicios</div></div><div class="ts"><div class="ts-v">$40</div><div class="ts-l">Visita</div></div></div>
+      <div class="tbs"><button class="bsm bsm-p" onclick="event.stopPropagation();setT('Andrea López','AL','#16A34A','Electricista','4.8','187','$40');nav('s6')">Seleccionar →</button><button class="bsm bsm-o" onclick="event.stopPropagation()">Ver perfil</button></div>
+    </div>
+    <div class="tc" onclick="setT('Mario Vega','MV','#111827','Electricista','4.7','244','$38');nav('s6')">
+      <div class="tch"><div class="tav" style="background:#111827;">MV</div><div class="ti"><h4>Mario Vega</h4><p>Electricista · 10 años exp.</p><div class="ti-m"><div class="bdg bg-g"><span class="dot dg"></span>Verificado</div><div class="bdg bg-a">A 6.8 km</div></div></div></div>
+      <div class="tst"><div class="ts"><div class="ts-v">4.7</div><div class="ts-l">Rating</div></div><div class="ts"><div class="ts-v">244</div><div class="ts-l">Servicios</div></div><div class="ts"><div class="ts-v">$38</div><div class="ts-l">Visita</div></div></div>
+      <div class="tbs"><button class="bsm bsm-p" onclick="event.stopPropagation();setT('Mario Vega','MV','#111827','Electricista','4.7','244','$38');nav('s6')">Seleccionar →</button><button class="bsm bsm-o" onclick="event.stopPropagation()">Ver perfil</button></div>
+    </div>
+  </div></div>
+</div>
 
+<!-- ══ S6 CONFIRMACIÓN ══ -->
+<div class="screen" id="s6">
+  <div class="sb" style="background:var(--p);pointer-events:all;"><button class="bk" style="background:rgba(255,255,255,.18);border:none;" onclick="goBack()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div style="flex:1;"></div></div>
+  <div style="background:var(--p);display:flex;gap:6px;justify-content:center;padding:0 0 14px;flex-shrink:0;"><div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);"></div><div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);"></div><div style="width:22px;height:6px;border-radius:3px;background:rgba(255,255,255,.9);"></div></div>
+  <div class="scroll">
+    <div class="ch"><div class="cav" id="c-av">CR</div><div class="cn" id="c-n">Carlos Ramírez</div><div class="crl" id="c-rl">Electricista · Técnico verificado</div><div class="cvr"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6.5" fill="#16A34A"/><path d="M3.5 6.5l2.5 2.5 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Verificado por Mano</span></div></div>
+    <div class="cb"><div class="cro"><span class="cl2">Servicio</span><span class="cv" id="c-sv">Electricidad</span></div><div class="cro"><span class="cl2">Urgencia</span><span class="cv">🚨 Hoy mismo</span></div><div class="cro"><span class="cl2">Dirección</span><span class="cv" id="c-ad">Escazú, San José</span></div><div class="cro"><span class="cl2">Llegada estimada</span><span class="cv">~20–30 min</span></div><div class="cro"><span class="cl2">Costo de visita</span><span class="cv cp2" id="c-pr">$45</span></div></div>
+    <div class="ca"><button class="btn btn-p" onclick="confirmBooking()">✓ Confirmar solicitud</button><button class="btn btn-g" onclick="goBack()">Elegir otro técnico</button></div>
+  </div>
+  <div class="sov" id="sov"><div class="sov-em">✅</div><h2>¡Solicitud enviada!</h2><p>Tu técnico fue notificado.<br/>Te avisamos cuando esté en camino.</p><button class="sov-btn" onclick="afterConfirm()">Ver estado del servicio →</button></div>
+</div>
+
+<!-- ══ S7 TRACKING ══ -->
+<div class="screen" id="s7">
+  <div class="sb"><span class="sb-t">9:41</span></div>
+  <div class="tb"><button class="bk" onclick="goBack()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="tb-ttl">Estado del servicio</div><button class="tb-r"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.5" fill="#111827"/><circle cx="8" cy="8" r="1.5" fill="#111827"/><circle cx="8" cy="12" r="1.5" fill="#111827"/></svg></button></div>
+  <div class="scroll">
+    <div class="tmap"><div style="text-align:center;"><div class="tmap-pin">📍</div><p id="t-sub">Carlos R. está en camino</p></div></div>
+    <div style="padding:0 20px 24px;">
+      <div class="tkcard">
+        <div class="tkst"><div class="tkic">🚗</div><div class="tkb"><h3>Tu técnico está en camino</h3><p id="t-det">Carlos Ramírez · Electricista</p></div></div>
+        <div class="eta">Llegada estimada: ~15 min</div>
+        <div class="stks">
+          <div class="stk"><div class="stk-ln"><div class="stk-d done"></div><div class="stk-c done"></div></div><div class="stk-bd"><h4>Solicitud confirmada</h4><p>9:23 AM · Técnico asignado</p></div></div>
+          <div class="stk"><div class="stk-ln"><div class="stk-d cur"></div><div class="stk-c"></div></div><div class="stk-bd"><h4>En camino</h4><p>Salió hace 8 minutos</p></div></div>
+          <div class="stk"><div class="stk-ln"><div class="stk-d pend"></div><div class="stk-c"></div></div><div class="stk-bd"><h4>Llegó al sitio</h4><p>Pendiente</p></div></div>
+          <div class="stk"><div class="stk-ln"><div class="stk-d pend"></div></div><div class="stk-bd"><h4>Servicio completado</h4><p>Pendiente</p></div></div>
+        </div>
+        <div class="ctrow"><div class="cta2" id="t-av" style="background:var(--p);">CR</div><div class="cti"><h4 id="t-nm">Carlos Ramírez</h4><p>⭐ 4.9 · 312 servicios · Verificado</p></div><div class="ctbs"><button class="ctb ctb-cl">📞</button><button class="ctb ctb-ch">💬</button></div></div>
+      </div>
+      <button class="btn btn-o" onclick="goHome()">← Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+</div></div><!-- /screens /phone -->
 <script>
-// ── STATE ──
-let history = ['s-splash'];
-let selectedCat = {name:'Electricidad', emoji:'⚡'};
-let selectedTechData = {};
+// ══ STATE ══
+const S={cat:{n:'Electricidad',e:'⚡'},tech:{n:'Carlos Ramírez',i:'CR',c:'#5B4FD9',r:'Electricista',p:'$45'},stk:['s1'],busy:false};
+const DUR=320;
+const $=id=>document.getElementById(id);
 
-// ── NAVIGATION ──
-function go(id){
-  const cur = history[history.length-1];
-  if(cur===id) return;
-
-  const curEl = document.getElementById(cur);
-  const nextEl = document.getElementById(id);
-
-  curEl.classList.add('exit');
-  nextEl.classList.remove('prev');
-  nextEl.classList.add('active');
-
-  setTimeout(()=>{ curEl.classList.remove('active','exit'); },380);
-
-  history.push(id);
-  updateCatDisplay();
-}
-
-function back(){
-  if(history.length<=1) return;
-  const cur = history.pop();
-  const prev = history[history.length-1];
-
-  const curEl = document.getElementById(cur);
-  const prevEl = document.getElementById(prev);
-
-  curEl.style.transform='translateX(100%)';
-  curEl.style.transition='transform 0.35s cubic-bezier(0.4,0,0.2,1)';
-  prevEl.classList.remove('exit','prev');
-  prevEl.classList.add('active');
-  prevEl.style.transform='translateX(-30%)';
-  prevEl.style.transition='none';
-
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      prevEl.style.transition='transform 0.35s cubic-bezier(0.4,0,0.2,1)';
-      prevEl.style.transform='translateX(0)';
-    });
-  });
-
+// ══ ANIMATION ENGINE ══
+function anim(fromEl,toEl,dir,cb){
+  const startPos = dir==='fwd' ? 'translateX(100%)' : 'translateX(-28%)';
+  const endPos   = dir==='fwd' ? 'translateX(-28%)' : 'translateX(100%)';
+  const ease=`transform ${DUR}ms cubic-bezier(.4,0,.2,1)`;
+  toEl.style.transition='none';
+  toEl.style.transform=startPos;
+  toEl.classList.add('on');
+  toEl.getBoundingClientRect();
+  fromEl.style.transition=ease; fromEl.style.transform=endPos;
+  toEl.style.transition=ease;   toEl.style.transform='translateX(0)';
   setTimeout(()=>{
-    curEl.classList.remove('active');
-    curEl.style.transform='';
-    curEl.style.transition='';
-    prevEl.style.transition='';
-    prevEl.style.transform='';
-  },380);
+    fromEl.classList.remove('on');
+    fromEl.style.transition=fromEl.style.transform='';
+    toEl.style.transition=toEl.style.transform='';
+    S.busy=false;
+    if(cb)cb();
+  },DUR);
 }
 
-// ── INTERACTIONS ──
-function selectCat(name, emoji){
-  selectedCat = {name, emoji};
+// ══ NAVIGATION ══
+function nav(to){
+  if(S.busy)return;
+  const from=S.stk[S.stk.length-1];
+  if(from===to)return;
+  S.busy=true; S.stk.push(to);
+  anim($(from),$(to),'fwd',()=>onEnter(to));
+}
+function goBack(){
+  if(S.busy||S.stk.length<=1)return;
+  S.busy=true;
+  const from=S.stk.pop();
+  const to=S.stk[S.stk.length-1];
+  anim($(from),$(to),'back',null);
+}
+function goHome(){
+  if(S.busy)return;
+  const from=S.stk[S.stk.length-1];
+  if(from==='s2')return;
+  S.busy=true; $('sov').classList.remove('on'); S.stk=['s2'];
+  anim($(from),$('s2'),'back',null);
 }
 
-function updateCatDisplay(){
-  const el = document.getElementById('selected-cat-display');
-  const nameEl = document.getElementById('cat-name-display');
-  if(el) el.querySelector('span').textContent = selectedCat.emoji;
-  if(nameEl) nameEl.textContent = selectedCat.name;
-
-  const confirmService = document.getElementById('confirm-service');
-  if(confirmService) confirmService.textContent = selectedCat.name;
+// ══ ENTER HOOK — syncs state to DOM ══
+function onEnter(id){
+  if(id==='s4'){$('cat-em').textContent=S.cat.e;$('cat-nm').textContent=S.cat.n;}
+  if(id==='s6'){
+    $('sov').classList.remove('on');
+    $('c-av').textContent=S.tech.i; $('c-av').style.background=S.tech.c;
+    $('c-n').textContent=S.tech.n;  $('c-rl').textContent=S.tech.r+' · Técnico verificado';
+    $('c-sv').textContent=S.cat.n;  $('c-pr').textContent=S.tech.p;
+    const a=$('addr'); $('c-ad').textContent=a?a.value:'Escazú, San José';
+  }
+  if(id==='s7'){
+    $('t-av').textContent=S.tech.i; $('t-av').style.background=S.tech.c;
+    $('t-nm').textContent=S.tech.n;
+    $('t-det').textContent=S.tech.n+' · '+S.tech.r;
+    $('t-sub').textContent=S.tech.n.split(' ')[0]+' está en camino';
+  }
 }
 
-function selectUrgency(el){
-  document.querySelectorAll('.urgency-item').forEach(i=>i.classList.remove('selected'));
-  el.classList.add('selected');
+// ══ INTERACTIONS ══
+function setCat(n,e){S.cat={n,e};}
+
+// Tap con ripple visual (grid home) → navega a s4
+function tapCat(el,n,e){
+  setCat(n,e);
+  if(el){
+    // ripple animado en el grid del home
+    const r=document.createElement('div');
+    r.className='ripple-el';
+    r.style.top=(el.offsetHeight/2)+'px';
+    r.style.left=(el.offsetWidth/2)+'px';
+    el.appendChild(r);
+    r.addEventListener('animationend',()=>r.remove());
+    setTimeout(()=>nav('s4'),180);
+  } else {
+    // desde la lista de búsqueda S3 — sin delay
+    nav('s4');
+  }
 }
-
-function selectTech(name, initials, color, role){
-  selectedTechData = {name, initials, color, role};
-  document.getElementById('confirm-avatar').textContent = initials;
-  document.getElementById('confirm-avatar').style.background = color;
-  document.getElementById('confirm-name').textContent = name;
-  document.getElementById('confirm-role').textContent = role + ' · Técnico verificado';
+function setT(n,i,c,r,rt,j,p){S.tech={n,i,c,r,p};}
+function pickU(el){document.querySelectorAll('.ui').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+function pickF(el){document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+function confirmBooking(){$('sov').classList.add('on');}
+function afterConfirm(){
+  $('sov').classList.remove('on');
+  if(S.busy)return;
+  S.busy=true; S.stk.pop(); S.stk.push('s7');
+  anim($('s6'),$('s7'),'fwd',()=>onEnter('s7'));
 }
-
-function confirmBooking(){
-  const overlay = document.getElementById('success-overlay');
-  overlay.classList.add('show');
-}
-
-function hideSuccess(){
-  const overlay = document.getElementById('success-overlay');
-  overlay.classList.remove('show');
-  go('s-tracking');
-}
-
-// Filter chips
-document.querySelectorAll('.filter-chip').forEach(chip=>{
-  chip.addEventListener('click',function(){
-    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
-
-// Init
-updateCatDisplay();
 </script>
 </body>
 </html>
